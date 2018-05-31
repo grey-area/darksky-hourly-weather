@@ -7,6 +7,12 @@ import json
 import argparse
 import datetime
 
+termcolor_available = True
+try:
+    from termcolor import colored
+except ImportError:
+    termcolor_available = False
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -62,11 +68,21 @@ def print_weather_data(locations):
             row['precipProbability']
         )
         
-        print('{}\t{}°C\t{:.1f}mm, {}%\t{}'.format(
-            date.strftime('%I %p'),
+        time = date.strftime('%I %p')
+        precip_probability = round(100 * row['precipProbability'])
+        precip_probability_str = '{}%'.format(precip_probability)
+        if termcolor_available and precip_probability > 20:
+            colour = 'yellow'
+            if precip_probability > 40:
+                colour = 'red'
+            time = colored(time, colour)
+            precip_probability_str = colored(precip_probability_str, colour)
+
+        print('{}\t{}°C\t{:.1f}mm, {}\t{}'.format(
+            time,
             round(row['temperature']),
             row['precipIntensity'],
-            round(100 * row['precipProbability']),
+            precip_probability_str,
             row['summary']   
         ))
     

@@ -36,7 +36,7 @@ def get_weather_data(darksky_key, locations, args):
                 darksky_key, location['latitude'], location['longitude']
             )
             data = json.loads(urllib.request.urlopen(url).read().decode())['hourly']['data']
-            
+
             json.dump(data, open(data_path, 'w'))
 
         location['data'] = data
@@ -67,7 +67,7 @@ def print_weather_data(locations):
             max_probability,
             row['precipProbability']
         )
-        
+
         time = date.strftime('%I %p')
         precip_probability = round(100 * row['precipProbability'])
         precip_probability_str = '{}%'.format(precip_probability)
@@ -83,9 +83,9 @@ def print_weather_data(locations):
             round(row['temperature']),
             row['precipIntensity'],
             precip_probability_str,
-            row['summary']   
+            row['summary']
         ))
-    
+
     print('\nMax. precipitation intensity:\t\t{:.1f}mm'.format(
         max_intensity
     ))
@@ -95,6 +95,10 @@ def print_weather_data(locations):
 
 
 if __name__ == '__main__':
+    os.chdir(
+        os.path.dirname(os.path.abspath(__file__))
+    )
+
     config = json.load(open('config.json'))
     darksky_key, locations = config['key'], config['locations']
 
@@ -102,6 +106,6 @@ if __name__ == '__main__':
 
     if not os.path.exists('data'):
         os.makedirs('data')
-    
+
     get_weather_data(darksky_key, locations, args)
     print_weather_data(locations)

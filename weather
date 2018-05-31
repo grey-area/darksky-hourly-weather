@@ -22,6 +22,11 @@ def parse_args():
         action='store_true', help='Use previously loaded data'
     )
 
+    parser.add_argument(
+        '--compact', default=False,
+        action='store_true', help='Compact printing'
+    )
+
     return parser.parse_args()
 
 
@@ -42,7 +47,7 @@ def get_weather_data(darksky_key, locations, args):
         location['data'] = data
 
 
-def print_weather_data(locations):
+def print_weather_data(locations, args):
     current_date = datetime.datetime.now()
     location = locations['MAN']
 
@@ -50,6 +55,10 @@ def print_weather_data(locations):
 
     max_intensity = 0.0
     max_probability = 0.0
+
+    datestring = current_date.strftime('%A %-d %B %Y')
+    print(datestring)
+    print('=' * (len(datestring) if args.compact else 45))
 
     data = location['data']
     for row in data:
@@ -78,19 +87,29 @@ def print_weather_data(locations):
             time = colored(time, colour)
             precip_probability_str = colored(precip_probability_str, colour)
 
-        print('{}\t{}°C\t{:.1f}mm, {}\t{}'.format(
-            time,
-            round(row['temperature']),
-            row['precipIntensity'],
-            precip_probability_str,
-            row['summary']
-        ))
+        if args.compact:
+            print('{}\t{}°C\t{}'.format(
+                time,
+                round(row['temperature']),
+                precip_probability_str,
+            ))
+        else:
+            print('{}\t{}°C\t{:.1f}mm, {}\t{}'.format(
+                time,
+                round(row['temperature']),
+                row['precipIntensity'],
+                precip_probability_str,
+                row['summary']
+            ))
 
-    print('\nMax. precipitation intensity:\t\t{:.1f}mm'.format(
-        max_intensity
+    word = 'precipication '
+    if args.compact:
+        word = ''
+    print('\nMax. {}intensity: {:.1f}mm'.format(
+        word, max_intensity
     ))
-    print('Max. precipitation probabiility:\t{}%'.format(
-        round(100 * max_probability)
+    print('Max. {}probabiility: {}%'.format(
+        word, round(100 * max_probability)
     ))
 
 
@@ -108,4 +127,4 @@ if __name__ == '__main__':
         os.makedirs('data')
 
     get_weather_data(darksky_key, locations, args)
-    print_weather_data(locations)
+    print_weather_data(locations, args)

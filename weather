@@ -57,6 +57,7 @@ def print_weather_data(locations, args):
     max_probability = 0.0
 
     datestring = current_date.strftime('%A %-d %B %Y')
+    datestring += current_date.strftime(', requested at %H:%M')
     print(datestring)
     print('=' * (len(datestring) if args.compact else 45))
 
@@ -64,7 +65,7 @@ def print_weather_data(locations, args):
     for row in data:
         date = datetime.datetime.utcfromtimestamp(row['time'])
         if date.day != current_date.day:
-            break
+            continue
         if date.hour < current_date.hour:
             continue
 

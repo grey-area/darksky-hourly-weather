@@ -23,6 +23,12 @@ def parse_args():
     )
 
     parser.add_argument(
+        '--location', default='HOME',
+        type=str, choices=['HOME', 'WORK'],
+        help='Location to get forecasts for'
+    )
+
+    parser.add_argument(
         '--compact', default=False,
         action='store_true', help='Compact printing'
     )
@@ -49,7 +55,7 @@ def get_weather_data(darksky_key, locations, args):
 
 def print_weather_data(locations, args):
     current_date = datetime.datetime.now()
-    location = locations['MAN']
+    location = locations[args.location]
 
     print(chr(27) + '[2J') # clear
 

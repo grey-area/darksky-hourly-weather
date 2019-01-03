@@ -36,6 +36,7 @@ the config.json file.
 
 ## Example Output
 
+```
 Thursday 3 January 2019, requested at 14:45
 =============================================
 02 PM	3°C	0.0mm, 0%	Overcast
@@ -48,3 +49,4 @@ Thursday 3 January 2019, requested at 14:45
 09 PM	-2°C	0.0mm, 0%	Clear
 10 PM	-2°C	0.0mm, 0%	Clear
 11 PM	-2°C	0.0mm, 0%	Clear
+```
